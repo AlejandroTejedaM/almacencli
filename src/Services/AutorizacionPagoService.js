@@ -6,17 +6,17 @@ class AutorizacionPagoService {
     findAll() {
         return axios.get(URL_BASE);
     }
-    create(auto) {
-        return axios.post(URL_BASE, auto);
+    create(autorizacionPago) {
+        return axios.post(URL_BASE, autorizacionPago);
     }
-    findById(idAuto) {
-        return axios.get(URL_BASE + '/' + idAuto);
+    findById(autorizacionId) {
+        return axios.get(URL_BASE + '/' + autorizacionId);
     }
-    update(idAuto, auto) {
-        return axios.put(URL_BASE + '/' + idAuto, auto);
+    update(autorizacionId, autorizacionPago) {
+        return axios.put(URL_BASE + '/' + autorizacionId, autorizacionPago);
     }
-    delete(idAuto) {
-        return axios.delete( URL_BASE+ '/' + idAuto);
+    delete(autorizacionId) {
+        return axios.delete( URL_BASE+ '/' + autorizacionId);
     }
 }
 
