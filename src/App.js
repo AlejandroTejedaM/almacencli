@@ -1,22 +1,24 @@
 import logo from './logo.svg';
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {HeadComponentAutorizacionPago} from "./Components/AutorizacionPagoComponents/HeadComponentAutorizacionPago";
-import {FootComponentAutorizacionPago} from "./Components/AutorizacionPagoComponents/FootComponentAutorizacionPago";
+import {HeadComponent} from "./Components/HeadComponent";
+import {FootComponent} from "./Components/FootComponent";
 import ListaAutorizacionPagoComponent from "./Components/AutorizacionPagoComponents/ListaAutorizacionPagoComponent";
 import ListaVentaComponent from "./Components/VentaComponents/ListaVentaComponent";
+import ListaProductoComponent from "./Components/ProductoComponents/ListaProductoComponent";
 
 function App() {
     return (<div className="App">
         <BrowserRouter>
-            <HeadComponentAutorizacionPago/>
+            <HeadComponent/>
             <div className='container'>
                 <Routes>
                     <Route path='/autorizacionPago' element={<ListaAutorizacionPagoComponent/>}/>
                     <Route path='/venta' element={<ListaVentaComponent/>}/>
+                    <Route path='/lista-productos' element={<ListaProductoComponent/>}></Route>
                 </Routes>
             </div>
-            <FootComponentAutorizacionPago/>
+            <FootComponent/>
         </BrowserRouter>
     </div>);
 }

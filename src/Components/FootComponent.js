@@ -1,4 +1,4 @@
-export function FootComponentVenta() {
+export function FootComponent() {
     return (
         <div>
             <footer className='footer' >
