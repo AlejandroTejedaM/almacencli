@@ -6,6 +6,7 @@ import {FootComponent} from "./Components/FootComponent";
 import ListaAutorizacionPagoComponent from "./Components/AutorizacionPagoComponents/ListaAutorizacionPagoComponent";
 import ListaVentaComponent from "./Components/VentaComponents/ListaVentaComponent";
 import ListaProductoComponent from "./Components/ProductoComponents/ListaProductoComponent";
+import ListaCarritoComponent from "./Components/CarritoCompraComponents/ListaCarritoComponent";
 
 function App() {
     return (<div className="App">
@@ -16,6 +17,7 @@ function App() {
                     <Route path='/autorizacionPago' element={<ListaAutorizacionPagoComponent/>}/>
                     <Route path='/venta' element={<ListaVentaComponent/>}/>
                     <Route path='/lista-productos' element={<ListaProductoComponent/>}></Route>
+                    <Route path='/carrito' element={<ListaCarritoComponent/>}></Route>
                 </Routes>
             </div>
             <FootComponent/>

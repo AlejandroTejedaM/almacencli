@@ -19,6 +19,7 @@ export default function ListaProductoComponent() {
             console.log(error);
         })
     }
+
     return (
         <div className='container'>
             <h2 className='text-center'>Productos</h2>
