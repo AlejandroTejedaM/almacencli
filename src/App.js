@@ -7,6 +7,8 @@ import ListaAutorizacionPagoComponent from "./Components/AutorizacionPagoCompone
 import ListaVentaComponent from "./Components/VentaComponents/ListaVentaComponent";
 import ListaProductoComponent from "./Components/ProductoComponents/ListaProductoComponent";
 import ListaCarritoComponent from "./Components/CarritoCompraComponents/ListaCarritoComponent";
+import FormularioCajeroComponent from "./Components/CajeroComponents/FormularioCajeroComponent";
+import ListaCajeroComponent from "./Components/CajeroComponents/ListaCajerosComponent";
 
 function App() {
     return (<div className="App">
