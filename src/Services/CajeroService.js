@@ -1,22 +1,26 @@
-import axios from 'axios';
+import axios from "axios";
 
-const URL_BASE = "http://localhost:8150/cajero";
+const URL_BASE = "http://localhost:8080/api/cajero";
 
-class CajeroService {
-    findAll() {
+class CajeroService{
+    findAll(){
         return axios.get(URL_BASE);
     }
-    create(cajero) {
-        return axios.post(URL_BASE, cajero);
+
+    create(cajero){
+        return axios.post(URL_BASE,cajero)
     }
-    findById(cajeroId) {
+
+    findByID(cajeroId){
         return axios.get(URL_BASE + '/' + cajeroId);
     }
-    update(cajeroId, cajero) {
+
+    update(cajeroId,cajero){
         return axios.put(URL_BASE + '/' + cajeroId, cajero);
     }
-    delete(cajeroId) {
-        return axios.delete( URL_BASE+ '/' + cajeroId);
+
+    delete(cajeroId){
+        return axios.delete(URL_BASE + '/' + cajeroId);
     }
 }
 
