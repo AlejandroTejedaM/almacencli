@@ -18,6 +18,9 @@ function App() {
                     <Route path='/venta' element={<ListaVentaComponent/>}/>
                     <Route path='/lista-productos' element={<ListaProductoComponent/>}></Route>
                     <Route path='/carrito' element={<ListaCarritoComponent/>}></Route>
+                    <Route path='/cajeros' element={<ListaCajeroComponent/>}></Route>
+                    <Route path='/form-cajero' element={<FormularioCajeroComponent/>}></Route>
+                    <Route path='/edit-cajero/:cajeroId' element={<FormularioCajeroComponent/>}></Route>
                 </Routes>
             </div>
             <FootComponent/>

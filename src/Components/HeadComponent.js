@@ -10,6 +10,7 @@ export function HeadComponent() {
                         <a href="/carrito" className="navbar-brand">Carrito</a>
                         <a href="/venta" className="navbar-brand">Ventas</a>
                         <a href="/autorizacionPago" className="navbar-brand">Autorizaciones_pago</a>
+                        <a href="/cajero" className="navbar-brand">Cajero</a>
                     </div>
                 </nav>
             </header>
