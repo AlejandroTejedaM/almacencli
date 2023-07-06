@@ -46,6 +46,21 @@ export default function ListaCarritoComponent() {
         listaProdutos();
         listaCajeros();
     }, [])
+
+    useEffect(() => {
+        primerCajeroLoad();
+    })
+
+    const primerCajeroLoad = () => {
+        if (cajeros.length !== 0) {
+            const cajero = cajeros[0];
+            cajeroSeleccionado.cajeroId = cajero.cajeroId
+            cajeroSeleccionado.nombre = cajero.nombre
+            cajeroSeleccionado.apePat = cajero.apePat
+            cajeroSeleccionado.apeMat = cajero.apeMat
+            cajeroSeleccionado.salario = cajero.salario
+        }
+    }
     const listaProdutos = () => {
         productoService.findAll().then(response => {
             setProductos(response.data);
@@ -76,20 +91,26 @@ export default function ListaCarritoComponent() {
     }
 
     //
-    function AgregarProductoCarito(productoId, nombre, precioUnitario) {
-        const precio = parseFloat(precioUnitario);
-        const nuevoProducto = {
-            productoID: productoId,
-            nombre: nombre,
-            cantidad: 1,
-            precioUnitario: precio
-        };
+    async function AgregarProductoCarito(productoId, nombre, precioUnitario) {
+        const response = await ProductoService.findById(productoId);
+        console.log(response.data.stock)
+        if (response.data.stock > 0 ) {
+            const precio = parseFloat(precioUnitario);
+            const nuevoProducto = {
+                productoID: productoId,
+                nombre: nombre,
+                cantidad: 1,
+                precioUnitario: precio
+            };
 
-        setCarrito(prevCarrito => {
-            const nuevoCarrito = [...prevCarrito, nuevoProducto];
-            CalculoTotal(nuevoCarrito);
-            return nuevoCarrito;
-        });
+            setCarrito(prevCarrito => {
+                const nuevoCarrito = [...prevCarrito, nuevoProducto];
+                CalculoTotal(nuevoCarrito);
+                return nuevoCarrito;
+            });
+        } else {
+            alert("No hay stock suficiente");
+        }
     }
 
     async function RealizarVenta() {
@@ -100,6 +121,7 @@ export default function ListaCarritoComponent() {
                 fechaVenta: new Date().toISOString().split('T')[0],
                 cajero: cajeroSeleccionado
             };
+            console.log(ventaData)
             const responseVenta = await ventaService.create(ventaData);
             const ventaId = responseVenta.data.ventaId;
             console.log(ventaId);
@@ -138,6 +160,7 @@ export default function ListaCarritoComponent() {
                 };
                 console.log(detalleVenta)
                 await DetalleVentaService.create(detalleVenta);
+                await actualizarStockProducto(productoR.productoID, productoR.cantidad);
             }
             //AutorizacionPago
             const autorizacionPagoData = {
@@ -206,6 +229,20 @@ export default function ListaCarritoComponent() {
             return nuevoCarrito;
         });
     }
+
+    const actualizarStockProducto = async (productoId, cantidad) => {
+        try {
+            const response = await ProductoService.findById(productoId);
+            const producto = response.data;
+            const stockActualizado = producto.stock - cantidad;
+            producto.stock = stockActualizado;
+            await ProductoService.update(productoId, producto);
+            console.log(producto);
+            listaProdutos(); // Update the product list after stock update
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
 
     return (
@@ -296,15 +333,15 @@ export default function ListaCarritoComponent() {
                                 <th>{producto.precioUnitario}</th>
                                 <th>{producto.cantidad}</th>
                                 <div className='edit-buttons'>
-                                    <button type="submit" className="btn btn-success" onClick={() => {
-                                        AumentarCantidadProducto(producto.productoID)
-                                    }}>
-                                        +
-                                    </button>
                                     <button type="submit" className="btn btn-danger" onClick={() => {
                                         DisminuirCantidadProducto(producto.productoID)
                                     }}>
                                         -
+                                    </button>
+                                    <button type="submit" className="btn btn-success" onClick={() => {
+                                        AumentarCantidadProducto(producto.productoID)
+                                    }}>
+                                        +
                                     </button>
                                 </div>
                             </tr>

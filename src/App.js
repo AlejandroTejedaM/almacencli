@@ -9,6 +9,7 @@ import ListaProductoComponent from "./Components/ProductoComponents/ListaProduct
 import ListaCarritoComponent from "./Components/CarritoCompraComponents/ListaCarritoComponent";
 import FormularioCajeroComponent from "./Components/CajeroComponents/FormularioCajeroComponent";
 import ListaCajeroComponent from "./Components/CajeroComponents/ListaCajerosComponent";
+import FormularioProductoComponent from "./Components/ProductoComponents/FormularioProductoComponent";
 
 function App() {
     return (<div className="App">
@@ -23,6 +24,7 @@ function App() {
                     <Route path='/cajeros' element={<ListaCajeroComponent/>}></Route>
                     <Route path='/form-cajero' element={<FormularioCajeroComponent/>}></Route>
                     <Route path='/edit-cajero/:cajeroId' element={<FormularioCajeroComponent/>}></Route>
+                    <Route path='/edit-producto/:productoId' element={<FormularioProductoComponent/>}></Route>
                 </Routes>
             </div>
             <FootComponent/>
