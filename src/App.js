@@ -1,25 +1,29 @@
-import logo from './logo.svg';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
+import FootComponent from './Components/FootComponent';
+import HeadComponent from './Components/HeadComponent';
+import ListaCajeroComponent from './Components/ListaCajerosComponent';
+import FormularioCajeroComponent from './Components/FormularioCajeroComponent';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+function App(){
+  return(
+    <div>
+      <BrowserRouter>
+      <HeadComponent/>
+      <div className='container'>
+        <Routes>
+          <Route exact path='/' element={<ListaCajeroComponent />}></Route>
+          <Route path='/cajeros' element={<ListaCajeroComponent/>}></Route>
+          <Route path='/form-cajero' element={<FormularioCajeroComponent/>}></Route>
+          <Route path='/edit-cajero/:cajeroId' element = {<FormularioCajeroComponent/>}></Route>
+        </Routes>
+      </div>
+      <FootComponent/>
+      </BrowserRouter>
     </div>
-  );
+  )
 }
+
 
 export default App;
