@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom";
-import CajeroService from '../Services/CajeroService';
+import React, {useEffect, useState} from "react"
+import {Link, useNavigate, useParams} from "react-router-dom";
+import CajeroService from "../../Services/CajeroService";
 
 export const FormularioCajeroComponent = () => {
 
@@ -9,12 +9,12 @@ export const FormularioCajeroComponent = () => {
     const [nombre, setNombre] = useState('');
     const [salario, setSalario] = useState('');
     const navigate = useNavigate();
-    const { cajeroId } = useParams();
+    const {cajeroId} = useParams();
     console.log(cajeroId);
     const saveCajero = (e) => {
         e.preventDefault();
-        const cajero = { apeMat, apePat, nombre, salario };
-        const cajeroActualizado = { cajeroId, apeMat, apePat, nombre, salario };
+        const cajero = {apeMat, apePat, nombre, salario};
+        const cajeroActualizado = {cajeroId, apeMat, apePat, nombre, salario};
 
         if (cajeroId) {
             CajeroService.update(cajeroId, cajeroActualizado).then((response) => {
@@ -35,7 +35,7 @@ export const FormularioCajeroComponent = () => {
 
     useEffect(() => {
         if (cajeroId) {
-            CajeroService.findByID(cajeroId)
+            CajeroService.findById(cajeroId)
                 .then((response) => {
                     setApeMat(response.data.apeMat);
                     setApePat(response.data.apePat);
