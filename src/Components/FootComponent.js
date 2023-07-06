@@ -3,7 +3,7 @@ export function FootComponent() {
         <div>
             <footer className='footer' >
                 <span className='text'>
-                    @AlexTM 2023 Tecnm Campus Teziutlán
+                    Compre y mejore su experiencia con nuestras Chelas
                 </span>
             </footer>
         </div>

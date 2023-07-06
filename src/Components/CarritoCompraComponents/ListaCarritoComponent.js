@@ -1,28 +1,35 @@
 import React, {useEffect, useState} from "react";
 import productoService from "../../Services/ProductoService";
 import cajeroService from "../../Services/CajeroService";
-import {Link} from "react-router-dom";
+import ProductoService from "../../Services/ProductoService";
+import ventaService from "../../Services/VentaService";
+import DetalleVentaService from "../../Services/DetalleVentaService";
+import AutorizacionPagoService from "../../Services/AutorizacionPagoService";
 
 export default function ListaCarritoComponent() {
 
     const [carrito, setCarrito] = useState([]);
 
-    const [total, setTotal] = useState(0.0);
-
 
     //Venta
     const [ventas, setVentas] = useState([]);
-    const [] = useState();
-    const [] = useState();
-    const [] = useState();
-    const [] = useState();
-    const [] = useState();
-    const ventaNueva = {};
+
+    const [ventaId, setVentaId] = useState('');
+    const [total, setTotal] = useState(0.0);
+    const [fechaVenta, setFechaVenta] = useState('');
+    const [cajero, setCajero] = useState({});
+    const ventaPosicion = {ventaId, total, fechaVenta, cajero};
 
     //Producto
     const [productos, setProductos] = useState([]);
-    const [] = useState();
-    const productoSeleccionado = {};
+    const [stock, setStock] = useState(0);
+    const [productoId, setProductoId] = useState('')
+    const [nombreProducto, setNombreProducto] = useState('');
+    const [tipoCerveza, setTipoCerveza] = useState({});
+    const [precio, setPrecio] = useState(0.0);
+    const [descripcion, setDescripcion] = useState('');
+    const [stockP, setStockP] = useState(0);
+    const productoSeleccionado = {productoId, nombreProducto, tipoCerveza, precio, descripcion, stockP};
 
     //Cajero
     const [cajeros, setCajeros] = useState([]);
@@ -38,9 +45,7 @@ export default function ListaCarritoComponent() {
     useEffect(() => {
         listaProdutos();
         listaCajeros();
-
     }, [])
-
     const listaProdutos = () => {
         productoService.findAll().then(response => {
             setProductos(response.data);
@@ -59,34 +64,147 @@ export default function ListaCarritoComponent() {
         })
     }
 
-    //
-    function AgregarProductoCarito(productoId, nombre, precioUnitario) {
-
-        const precio = parseFloat(precioUnitario);
-        setCarrito([
-            ...carrito,
-            {
-                productoID: productoId,
-                nombre: nombre,
-                cantidad: 0,
-                precioUnitario: precio
+    const CalculoTotal = (carrito) => {
+        let sumaTotal = 0.0;
+        if (Array.isArray(carrito)) {
+            for (const producto of carrito) {
+                const {cantidad, precioUnitario} = producto;
+                sumaTotal += cantidad * precioUnitario;
             }
-        ]);
+        }
+        setTotal(sumaTotal);
     }
 
-    function AumentarCantidadProducto(productoId) {
-        setCarrito(carrito.map(producto => {
-            console.log("holaaaaa" + productoId);
-            if (producto.productoID === productoId) {
-                return {
-                    ...producto,
-                    cantidad: producto.cantidad + 1
+    //
+    function AgregarProductoCarito(productoId, nombre, precioUnitario) {
+        const precio = parseFloat(precioUnitario);
+        const nuevoProducto = {
+            productoID: productoId,
+            nombre: nombre,
+            cantidad: 1,
+            precioUnitario: precio
+        };
+
+        setCarrito(prevCarrito => {
+            const nuevoCarrito = [...prevCarrito, nuevoProducto];
+            CalculoTotal(nuevoCarrito);
+            return nuevoCarrito;
+        });
+    }
+
+    async function RealizarVenta() {
+        try {
+            //Venta
+            const ventaData = {
+                total: total,
+                fechaVenta: new Date().toISOString().split('T')[0],
+                cajero: cajeroSeleccionado
+            };
+            const responseVenta = await ventaService.create(ventaData);
+            const ventaId = responseVenta.data.ventaId;
+            console.log(ventaId);
+            //DetallesVenta
+            for (const productoR of carrito) {
+
+                let productoF = {}
+                const responseProducto = await ProductoService.findById(productoR.productoID).then((response) => {
+                    productoF = response.data
+                    productoSeleccionado.productoId = productoF.productoId
+                    productoSeleccionado.nombreProducto = productoF.nombre
+                    productoSeleccionado.tipoCerveza = productoF.tipoCerveza
+                    productoSeleccionado.descripcion = productoF.descripcion
+                    productoSeleccionado.precio = productoF.precio
+                    productoSeleccionado.stockP = productoF.stock
+                    console.log(productoSeleccionado)
+                }).catch((error) => {
+                    console.log(error);
+                })
+                let ventaF = {}
+                const responseVenta = await
+                    ventaService.findById(ventaId).then((response) => {
+                        ventaF = response.data
+                        ventaPosicion.ventaId = ventaId
+                        ventaPosicion.fechaVenta = ventaF.fechaVenta
+                        ventaPosicion.cajero = ventaF.cajero
+                        console.log(ventaId)
+                    }).catch((error) => {
+                        console.log(error);
+                    })
+                const detalleVenta = {
+                    producto: productoSeleccionado,
+                    venta: ventaPosicion,
+                    cantidad: productoR.cantidad,
+                    precioUnitario: productoR.precioUnitario
                 };
-            } else {
-                return producto
+                console.log(detalleVenta)
+                await DetalleVentaService.create(detalleVenta);
             }
-        }));
-        console.log(carrito);
+            //AutorizacionPago
+            const autorizacionPagoData = {
+                venta: ventaPosicion,
+                monto: total,
+                fechaAutorizacion: new Date().toISOString().split('T')[0]
+            };
+            await AutorizacionPagoService.create(autorizacionPagoData);
+
+            // 4. Limpiar el carrito y reiniciar el total
+            setCarrito([]);
+            setTotal(0.0);
+            alert("La venta se ha realizado correctamente.");
+        } catch (error) {
+            console.log(error)
+            alert("Error al realizar la venta. Por favor, inténtalo nuevamente.");
+        }
+
+    }
+
+    async function AumentarCantidadProducto(productoId) {
+        try {
+            const response = await ProductoService.findById(productoId);
+            const productoAux = response.data;
+            setStock(productoAux.stock);
+
+            setCarrito(prevCarrito => {
+                const nuevoCarrito = prevCarrito.map(producto => {
+                    if (producto.productoID === productoId) {
+                        if (producto.cantidad < stock) {
+                            return {
+                                ...producto,
+                                cantidad: producto.cantidad + 1
+                            };
+                        }
+                    }
+                    return producto;
+                });
+
+                CalculoTotal(nuevoCarrito);
+                return nuevoCarrito;
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    function DisminuirCantidadProducto(productoId) {
+        setCarrito(prevCarrito => {
+            const nuevoCarrito = prevCarrito.map(producto => {
+                if (producto.productoID === productoId) {
+                    const nuevaCantidad = producto.cantidad - 1;
+                    if (nuevaCantidad === 0) {
+                        return null;
+                    } else {
+                        return {
+                            ...producto,
+                            cantidad: nuevaCantidad
+                        };
+                    }
+                } else {
+                    return producto;
+                }
+            }).filter(producto => producto !== null);
+            CalculoTotal(nuevoCarrito);
+            return nuevoCarrito;
+        });
     }
 
 
@@ -120,7 +238,6 @@ export default function ListaCarritoComponent() {
                             <option key={cajero.cajeroId}
                                     value={cajero.cajeroId}>{cajero.nombre + " " + cajero.apePat + " " + cajero.apeMat}</option>
                     )}
-                    {console.log(cajeros)}
                 </select>
 
             </div>
@@ -180,13 +297,12 @@ export default function ListaCarritoComponent() {
                                 <th>{producto.cantidad}</th>
                                 <div className='edit-buttons'>
                                     <button type="submit" className="btn btn-success" onClick={() => {
-                                        console.log(producto);
                                         AumentarCantidadProducto(producto.productoID)
                                     }}>
                                         +
                                     </button>
                                     <button type="submit" className="btn btn-danger" onClick={() => {
-
+                                        DisminuirCantidadProducto(producto.productoID)
                                     }}>
                                         -
                                     </button>
@@ -197,7 +313,13 @@ export default function ListaCarritoComponent() {
                 </tbody>
 
             </table>
-            <h2>Total: 0</h2>
+            <div style={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+                <h2>Total: ${total}</h2>
+                <button className="btn btn-primary" onClick={() => {
+                    RealizarVenta()
+                }}>Realizar venta
+                </button>
+            </div>
         </div>
     )
 }
