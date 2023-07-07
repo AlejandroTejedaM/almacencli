@@ -23,6 +23,7 @@ function App() {
                     <Route path='/autorizacionPago' element={<ListaAutorizacionPagoComponent/>}/>
                     <Route path='/venta' element={<ListaVentaComponent/>}/>
                     <Route path='/lista-productos' element={<ListaProductoComponent/>}></Route>
+                    <Route path='/' element={<ListaCarritoComponent/>}></Route>
                     <Route path='/carrito' element={<ListaCarritoComponent/>}></Route>
                     <Route path='/tipoCerveza' element={<ListaTipoCervezaComponent/>}></Route>
                     <Route path='/cajeros' element={<ListaCajeroComponent/>}></Route>
