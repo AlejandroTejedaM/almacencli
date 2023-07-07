@@ -2,14 +2,15 @@ import logo from './logo.svg';
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {HeadComponent} from "./Components/HeadComponent";
-import {FootComponent} from "./Components/FootComponent";
 import ListaAutorizacionPagoComponent from "./Components/AutorizacionPagoComponents/ListaAutorizacionPagoComponent";
 import ListaVentaComponent from "./Components/VentaComponents/ListaVentaComponent";
 import ListaProductoComponent from "./Components/ProductoComponents/ListaProductoComponent";
 import ListaCarritoComponent from "./Components/CarritoCompraComponents/ListaCarritoComponent";
-import FormularioCajeroComponent from "./Components/CajeroComponents/FormularioCajeroComponent";
 import ListaCajeroComponent from "./Components/CajeroComponents/ListaCajerosComponent";
+import FormularioCajeroComponent from "./Components/CajeroComponents/FormularioCajeroComponent";
 import FormularioProductoComponent from "./Components/ProductoComponents/FormularioProductoComponent";
+import FootComponent from "./Components/FootComponent";
+
 
 function App() {
     return (<div className="App">

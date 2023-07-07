@@ -35,7 +35,7 @@ export const FormularioCajeroComponent = () => {
 
     useEffect(() => {
         if (cajeroId) {
-            CajeroService.findById(cajeroId)
+            CajeroService.findByID(cajeroId)
                 .then((response) => {
                     setApeMat(response.data.apeMat);
                     setApePat(response.data.apePat);
