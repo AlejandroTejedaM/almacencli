@@ -11,6 +11,7 @@ export function HeadComponent() {
                         <a href="/venta" className="navbar-brand">Ventas</a>
                         <a href="/autorizacionPago" className="navbar-brand">Autorizaciones_pago</a>
                         <a href="/cajeros" className="navbar-brand">Cajeros</a>
+                        <a href="/tipoCerveza" className="navbar-brand">Tipo_Cerveza</a>
                     </div>
                 </nav>
             </header>

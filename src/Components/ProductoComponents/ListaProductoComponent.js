@@ -42,6 +42,7 @@ export default function ListaProductoComponent() {
     return (
         <div className='container'>
             <h2 className='text-center'>Productos</h2>
+            <Link to='/form-producto' className="btn btn-primary mb-2">Agregar Producto</Link>
             <table className='table table-dark table-border table-striped '>
                 <thead className='text-white text-center' style={{backgroundColor: 'black'}}>
                 <th>ID</th>

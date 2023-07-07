@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react"
 import {Link, useNavigate, useParams} from "react-router-dom";
 import cajeroService from "../../Services/CajeroService";
-import tipoCervezaService from "../../Services/tipoCervezaService";
+import tipoCervezaService from "../../Services/TipoCervezaService";
 import productoService from "../../Services/ProductoService";
 
 export const FormularioProductoComponent = () => {
@@ -46,7 +46,7 @@ export const FormularioProductoComponent = () => {
                     setDescripcion(response.data.descripcion);
                     setStock(response.data.stock);
                     setPrecio(response.data.precio);
-                    setTipoCerveza(response.data.tipoCerveza)
+                    setTipoCerveza(response.data.tipoCerveza);
                 })
                 .catch(error => {
                     console.log(error);
@@ -57,11 +57,20 @@ export const FormularioProductoComponent = () => {
     const listaTiposCerveza = () => {
         tipoCervezaService.findAll().then(response => {
             setTipoCervezas(response.data);
+            if (productoId) {
+                const tipoCervezaAux = response.data
+                for (const tipo of tipoCervezaAux) {
+                    const estado = tipo.tipoCervezaId === tipoCerveza.tipoCervezaId;
+                    if (estado) {
+                        setTipoCerveza(tipo);
+                        console.log(estado)
+                    }
+                }
+            }
             console.log(response.data);
         }).catch(error => {
             console.log(error);
         })
-        setTipoCerveza(cajeroService)
     }
 
 
@@ -87,11 +96,11 @@ export const FormularioProductoComponent = () => {
                                     <label className='form-label'>Nombre</label>
                                     <input
                                         type='text'
-                                        placeholder='Ingrese el apellido paterno'
-                                        name='apePat'
+                                        placeholder='Ingrese el nombre'
+                                        name='nombre'
                                         className='form-control'
                                         value={nombre}
-                                        onChange={(e) => setDescripcion(e.target.value)}
+                                        onChange={(e) => setNombre(e.target.value)}
                                     />
                                 </div>
                                 <div className='form-group mb-2'>
@@ -104,10 +113,13 @@ export const FormularioProductoComponent = () => {
                                             (e) => {
                                                 tipoCervezaService.findById(e.target.value).then((response) => {
                                                     const tipoCerveza = response.data;
+                                                    setTipoCerveza(tipoCerveza)
+                                                    console.log(tipoCerveza)
                                                 }).catch((error) => {
                                                     console.log(error);
                                                 })
                                             }}
+                                        value={tipoCerveza.tipoCervezaId}
                                         required
                                     >
                                         {tipoCervezas.map(
@@ -120,31 +132,31 @@ export const FormularioProductoComponent = () => {
                                 <div className='form-group mb-2'>
                                     <label className='form-label'>Precio</label>
                                     <input
-                                        type='text'
-                                        placeholder='Ingrese el nombre'
-                                        name='nombre'
+                                        type='number'
+                                        placeholder='Ingrese el precio'
+                                        name='precio'
                                         className='form-control'
                                         value={precio}
-                                        onChange={(e) => setNombre(e.target.value)}
+                                        onChange={(e) => setPrecio(e.target.value)}
                                     />
                                 </div>
                                 <div className='form-group mb-2'>
                                     <label className='form-label'>Descripción</label>
                                     <input
                                         type='text'
-                                        placeholder='Ingrese el salario'
-                                        name='salario'
+                                        placeholder='Ingrese la descripción'
+                                        name='descripcion'
                                         className='form-control'
                                         value={descripcion}
-                                        onChange={(e) => setStock(e.target.value)}
+                                        onChange={(e) => setDescripcion(e.target.value)}
                                     />
                                 </div>
                                 <div className='form-group mb-2'>
                                     <label className='form-label'>Stock</label>
                                     <input
-                                        type='text'
-                                        placeholder='Ingrese el salario'
-                                        name='salario'
+                                        type='number'
+                                        placeholder='Ingrese el stock'
+                                        name='stock'
                                         className='form-control'
                                         value={stock}
                                         onChange={(e) => setStock(e.target.value)}

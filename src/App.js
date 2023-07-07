@@ -10,6 +10,8 @@ import ListaCajeroComponent from "./Components/CajeroComponents/ListaCajerosComp
 import FormularioCajeroComponent from "./Components/CajeroComponents/FormularioCajeroComponent";
 import FormularioProductoComponent from "./Components/ProductoComponents/FormularioProductoComponent";
 import FootComponent from "./Components/FootComponent";
+import ListaTipoCervezaComponent from "./Components/TipoCervezaComponents/ListaTipoCervezaComponent";
+import FormularioTipoCervezaComponent from "./Components/TipoCervezaComponents/FormularioTipoCervezaComponent";
 
 
 function App() {
@@ -22,10 +24,15 @@ function App() {
                     <Route path='/venta' element={<ListaVentaComponent/>}/>
                     <Route path='/lista-productos' element={<ListaProductoComponent/>}></Route>
                     <Route path='/carrito' element={<ListaCarritoComponent/>}></Route>
+                    <Route path='/tipoCerveza' element={<ListaTipoCervezaComponent/>}></Route>
                     <Route path='/cajeros' element={<ListaCajeroComponent/>}></Route>
                     <Route path='/form-cajero' element={<FormularioCajeroComponent/>}></Route>
+                    <Route path='/form-tipochelas' element={<FormularioTipoCervezaComponent/>}></Route>
+                    <Route path='/form-producto' element={<FormularioProductoComponent/>}></Route>
                     <Route path='/edit-cajero/:cajeroId' element={<FormularioCajeroComponent/>}></Route>
                     <Route path='/edit-producto/:productoId' element={<FormularioProductoComponent/>}></Route>
+                    <Route path='/edit-tipochelas/:tipoCervezaId' element={<FormularioTipoCervezaComponent/>}></Route>
+
                 </Routes>
             </div>
             <FootComponent/>
