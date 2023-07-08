@@ -13,9 +13,9 @@ export const FormularioCajeroComponent = () => {
     console.log(cajeroId);
     const saveCajero = (e) => {
         e.preventDefault();
-        const cajero = {apeMat, apePat, nombre, salario};
+        const cajero = {nombre, apeMat, apePat, salario};
         const cajeroActualizado = {cajeroId, apeMat, apePat, nombre, salario};
-
+        console.log(cajero)
         if (cajeroId) {
             CajeroService.update(cajeroId, cajeroActualizado).then((response) => {
                 console.log(response.data);
@@ -103,12 +103,12 @@ export const FormularioCajeroComponent = () => {
                                 <div className='form-group mb-2'>
                                     <label className='form-label'>Salario</label>
                                     <input
-                                        type='text'
+                                        type='number'
                                         placeholder='Ingrese el salario'
                                         name='salario'
                                         className='form-control'
                                         value={salario}
-                                        onChange={(e) => setSalario(e.target.value)}
+                                        onChange={(e) => setSalario(parseFloat(e.target.value))}
                                     />
                                 </div>
                                 <button className='btn btn-success' onClick={(e) => saveCajero(e)}>Guardar</button>

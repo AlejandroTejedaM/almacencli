@@ -21,12 +21,15 @@ export default function ListaCajeroComponent() {
     }
 
     const deleteCajero = (cajeroId) => {
-        CajeroService.delete(cajeroId).then((response) => {
-            listarCajeros();
+        const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este cajero?');
+        if (confirmDelete) {
+            CajeroService.delete(cajeroId).then((response) => {
+                listarCajeros();
 
-        }).catch(error => {
-            console.log(error);
-        })
+            }).catch(error => {
+                console.log(error);
+            })
+        }
     }
 
     return (

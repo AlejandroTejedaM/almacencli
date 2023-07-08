@@ -287,4 +287,3 @@ export default function ListaCarritoComponent() {
         </div>
     </div>)
 };
-

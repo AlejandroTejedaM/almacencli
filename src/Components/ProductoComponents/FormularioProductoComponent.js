@@ -54,6 +54,11 @@ export const FormularioProductoComponent = () => {
         }
         listaTiposCerveza()
     }, [productoId]);
+    useEffect(() => {
+        if (tipoCervezas.length > 0) {
+            setTipoCerveza(tipoCervezas[0]);
+        }
+    }, [tipoCervezas]);
     const listaTiposCerveza = () => {
         tipoCervezaService.findAll().then(response => {
             setTipoCervezas(response.data);
