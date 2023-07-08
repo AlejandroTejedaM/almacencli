@@ -25,7 +25,7 @@ export default function ListaCarritoComponent() {
 
     useEffect(() => {
         calcularTotal();
-    }, [ carrito]);
+    }, [carrito]);
 
     const fetchProductos = () => {
         productoService
@@ -124,47 +124,54 @@ export default function ListaCarritoComponent() {
 
     const realizarVenta = async () => {
         try {
-            const ventaData = {
-                total: total, fechaVenta: new Date().toISOString().split("T")[0], cajero: cajeroSeleccionado,
-            };
-            const ventaPosicion = {}
-            const responseVenta = await ventaService.create(ventaData);
-            const ventaId = responseVenta.data.ventaId;
+            if(carrito.length > 0){
 
-            for (const producto of carrito) {
-                const responseProducto = await productoService.findById(producto.productoId);
-                const productoF = responseProducto.data;
-
-                let ventaF = {}
-                const responseVenta = await ventaService.findById(ventaId).then((response) => {
-                    ventaF = response.data
-                    ventaPosicion.ventaId = ventaId
-                    ventaPosicion.fechaVenta = ventaF.fechaVenta
-                    ventaPosicion.cajero = ventaF.cajero
-                    console.log(ventaId)
-                }).catch((error) => {
-                    console.log(error);
-                })
-
-                const detalleVenta = {
-                    producto: productoF,
-                    venta: ventaPosicion,
-                    cantidad: producto.cantidad,
-                    precioUnitario: producto.precioUnitario,
+                const ventaData = {
+                    total: total, fechaVenta: new Date().toISOString().split("T")[0], cajero: cajeroSeleccionado,
                 };
-                console.log(detalleVenta)
-                await DetalleVentaService.create(detalleVenta);
-                await actualizarStockProducto(producto.productoId, producto.cantidad);
+
+                const ventaPosicion = {}
+                const responseVenta = await ventaService.create(ventaData);
+                const ventaId = responseVenta.data.ventaId;
+
+                for (const producto of carrito) {
+                    const responseProducto = await productoService.findById(producto.productoId);
+                    const productoF = responseProducto.data;
+
+                    let ventaF = {}
+                    const responseVenta = await ventaService.findById(ventaId).then((response) => {
+                        ventaF = response.data
+                        ventaPosicion.ventaId = ventaId
+                        ventaPosicion.fechaVenta = ventaF.fechaVenta
+                        ventaPosicion.cajero = ventaF.cajero
+                        console.log(ventaId)
+                    }).catch((error) => {
+                        console.log(error);
+                    })
+
+                    const detalleVenta = {
+                        producto: productoF,
+                        venta: ventaPosicion,
+                        cantidad: producto.cantidad,
+                        precioUnitario: producto.precioUnitario,
+                    };
+                    console.log(detalleVenta)
+                    await DetalleVentaService.create(detalleVenta);
+                    await actualizarStockProducto(producto.productoId, producto.cantidad);
+                }
+
+                const autorizacionPagoData = {
+                    venta: ventaPosicion, monto: total, fechaAutorizacion: new Date().toISOString().split("T")[0],
+                };
+                await AutorizacionPagoService.create(autorizacionPagoData);
+
+                setCarrito([]);
+                setTotal(0.0);
+                alert("La venta se ha realizado correctamente.");
+            }else{
+                alert("El carrito se encuentra vacio")
             }
 
-            const autorizacionPagoData = {
-                venta: ventaPosicion, monto: total, fechaAutorizacion: new Date().toISOString().split("T")[0],
-            };
-            await AutorizacionPagoService.create(autorizacionPagoData);
-
-            setCarrito([]);
-            setTotal(0.0);
-            alert("La venta se ha realizado correctamente.");
         } catch (error) {
             console.log(error);
             alert("Error al realizar la venta. Por favor, inténtalo nuevamente.");

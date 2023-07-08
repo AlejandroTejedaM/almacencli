@@ -16,7 +16,7 @@ export default function ListaProductoComponent() {
 
     useEffect(() => {
         listaProdutos();
-    },[])
+    }, [])
 
     const listaProdutos = () => {
         productoService.findAll().then(response => {
@@ -39,42 +39,36 @@ export default function ListaProductoComponent() {
         }
     }
 
-    return (
-        <div className='container'>
-            <h2 className='text-center'>Productos</h2>
-            <Link to='/form-producto' className="btn btn-primary mb-2">Agregar Producto</Link>
-            <table className='table table-dark table-border table-striped '>
-                <thead className='text-white text-center' style={{backgroundColor: 'black'}}>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Tipo_Cerveza</th>
-                <th>Precio</th>
-                <th>Descripción</th>
-                <th>Stock</th>
-                <th>Opciones</th>
-                </thead>
-                <tbody className='text-center'>
-                {
-                    productos.map(
-                        producto =>
-                            <tr key={producto.productoId}>
-                                <td>{producto.productoId}</td>
-                                <td>{producto.nombre}</td>
-                                <td>{producto.tipoCerveza.nombre}</td>
-                                <td>{producto.precio}</td>
-                                <th>{producto.descripcion}</th>
-                                <th>{producto.stock}</th>
-                                <th>
-                                    <Link className='btn btn-info' to={`/edit-producto/${producto.productoId}`}>Editar</Link>
-                                    <button style={{marginLeft: "10px"}} className='btn btn-danger'
-                                            onClick={() => deleteProducto(producto.productoId)}>Eliminar
-                                    </button>
-                                </th>
-                            </tr>
-                    )
-                }
-                </tbody>
-            </table>
-        </div>
-    )
+    return (<div className='container'>
+        <h2 className='text-center'>Productos</h2>
+        <Link to='/form-producto' className="btn btn-primary mb-2">Agregar Producto</Link>
+        <table className='table table-dark table-border table-striped '>
+            <thead className='text-white text-center' style={{backgroundColor: 'black'}}>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Tipo_Cerveza</th>
+            <th>Precio</th>
+            <th>Descripción</th>
+            <th>Stock</th>
+            <th>Opciones</th>
+            </thead>
+            <tbody className='text-center'>
+            {productos.map(producto => <tr key={producto.productoId}>
+                <td>{producto.productoId}</td>
+                <td>{producto.nombre}</td>
+                <td>{producto.tipoCerveza.nombre}</td>
+                <td>{producto.precio}</td>
+                <th>{producto.descripcion}</th>
+                <th>{producto.stock}</th>
+                <th>
+                    <Link className='btn btn-info'
+                          to={`/edit-producto/${producto.productoId}`}>Editar</Link>
+                    <button style={{marginLeft: "10px"}} className='btn btn-danger'
+                            onClick={() => deleteProducto(producto.productoId)}>Eliminar
+                    </button>
+                </th>
+            </tr>)}
+            </tbody>
+        </table>
+    </div>)
 }
